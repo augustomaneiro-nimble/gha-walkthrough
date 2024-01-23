@@ -1,0 +1,22 @@
+name: Label issues
+on: 
+    issues:
+        types:
+            - opened
+jobs:
+    assign-label:
+        runs-on: ubuntu-latest
+        steps: 
+            - uses: actions/checkout@v4
+
+            - name: Add a label
+              env: 
+                SUPER_SECRET_VALUE: ${{ secrets.SUPER_SECRET_VALUE }}
+              run: |
+                issue_title="${{ github.event.issue.title }}"
+                if [[ "$issue_title" == *"bug"* ]]; then
+                    echo "issue is about a bug 🐛"
+                    echo "Assigning label BUG"
+                else 
+                    echo "Not a bug"
+                fi
