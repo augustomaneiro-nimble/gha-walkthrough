@@ -6,10 +6,10 @@ on:
       - development
 
 env:
-  SECRET_VALUE: ${{ secrets.TOP_SECRET_VALUE }}
+  ENVIRONMENT_VAR: ${{ vars.ENVIRONMENT_VAR }}
 
 jobs:
-    test:
+    unit-test:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -18,8 +18,9 @@ jobs:
               run: echo 'Unit testing completed! ✅'
 
     dev-deploy:
+        needs: unit-test
         environment: development
         runs-on: ubuntu-latest
         steps:
-            - name: Display secret values
-              run: echo $SECRET_VALUE
+            - name: Display environment variables
+              run: echo $ENVIRONMENT_VAR
