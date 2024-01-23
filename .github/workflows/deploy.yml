@@ -1,0 +1,37 @@
+name: Deployment
+
+on: 
+  push:
+    branches:
+      - main
+      - 'feature/*'
+
+env:
+  ENVIRONMENT_VAR: ${{ vars.ENVIRONMENT_VAR }}
+
+jobs:
+    unit-test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Unit Testing
+              run: echo 'Unit testing completed! ✅'
+
+    dev-deploy:
+        if: contains(github.ref, 'feature/') 
+        needs: unit-test
+        environment: development
+        runs-on: ubuntu-latest
+        steps:
+            - name: Display environment variables
+              run: echo $ENVIRONMENT_VAR
+
+    prod-deploy:
+        if: github.ref == 'refs/heads/main'
+        needs: unit-test
+        environment: production
+        runs-on: ubuntu-latest
+        steps:
+            - name: Display environment variables
+              run: echo $ENVIRONMENT_VAR
