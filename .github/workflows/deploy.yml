@@ -1,9 +1,10 @@
-name: Development Deployment
+name: Deployment
 
 on: 
   push:
     branches:
       - development
+      - production
 
 env:
   ENVIRONMENT_VAR: ${{ vars.ENVIRONMENT_VAR }}
@@ -18,9 +19,19 @@ jobs:
               run: echo 'Unit testing completed! ✅'
 
     dev-deploy:
+        if: ${{ github.ref_name }} == 'development' 
         needs: unit-test
         environment: development
         runs-on: ubuntu-latest
         steps:
             - name: Display environment variables
               run: echo $ENVIRONMENT_VAR
+
+    prod-deploy:
+      if: ${{ github.ref_name }} == 'production'
+      needs: unit-test
+      environment: production
+      runs-on: ubuntu-latest
+      steps:
+          - name: Display environment variables
+            run: echo $ENVIRONMENT_VAR
